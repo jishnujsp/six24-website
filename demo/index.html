@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en-IN" class="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Book a demo · SIX24</title>
+<meta name="description" content="Book a 30-minute walkthrough of SIX24, the Human Operations System.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://six24.in/demo/">
+<meta property="og:title" content="Book a demo · SIX24"><meta property="og:description" content="Book a 30-minute walkthrough of SIX24, the Human Operations System."><meta property="og:url" content="https://six24.in/demo/"><meta property="og:image" content="https://six24.in/assets/media/hero-poster.jpg">
+<script>(function(){var t;try{t=localStorage.getItem('six24.theme')}catch(e){}if(t)t=t.replace(/"/g,'');if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.className=t})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/flow.css">
+</head>
+<body>
+<div class="amb" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+<header class="top">
+  <a class="brand" href="../" aria-label="SIX24 home"><span class="s24">S24</span><span class="brand-t">Book a demo</span></a>
+  <div class="top-r">
+    <span class="count mono" id="count"></span>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch theme" title="Switch theme"></button>
+    <a class="icon-btn" id="closeBtn" href="../" aria-label="Close and go back to six24.in" title="Close"></a>
+  </div>
+</header>
+<main class="stage" id="stage" aria-live="polite"></main>
+<input class="hp" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+<div class="foot" aria-hidden="true"></div>
+<nav class="pager" id="pager" aria-label="Question navigation"><button id="upBtn" type="button" aria-label="Previous question"></button><button id="downBtn" type="button" aria-label="Next question"></button></nav>
+<div class="pv" id="pv">Preview: answers stay in this browser until the form is connected</div>
+<div class="scrim" id="scrim" role="dialog" aria-modal="true" aria-labelledby="dlgT">
+  <div class="dlg">
+    <h2 id="dlgT">Leave this form?</h2>
+    <p>Your answers are kept on this device if you save them. Open this page again to pick up where you left off.</p>
+    <div class="dlg-a"><button class="btn btn-bad" id="dDiscard" type="button">Discard</button><button class="btn" id="dCont" type="button">Continue</button><button class="btn-primary" id="dSave" type="button">Save and leave</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="../assets/config.js"></script>
+<script>
+
+const ROLES = ['People / HR', 'Finance', 'Founder / Leadership', 'Manager', 'Employee', 'Other'];
+const SIZES = ['Under 15', '15 – 50', '51 – 100', '101 – 300', '301 – 1,000', '1,000+'];
+
+function days() {
+  const out = [], d = new Date(), M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], W = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  d.setHours(12, 0, 0, 0);
+  while (out.length < 8) { d.setDate(d.getDate() + 1); if (d.getDay() === 0 || d.getDay() === 6) continue; out.push(W[d.getDay()] + ', ' + String(d.getDate()).padStart(2, '0') + ' ' + M[d.getMonth()] + ' ' + d.getFullYear()); }
+  return out;
+}
+window.FLOW = {
+  key: 'demo', home: '../', submitLabel: 'Request the demo', prefill: ['plan', 'name', 'email'],
+  welcome: { eyebrow: 'SIX24 · Book a demo', title: 'See SIX24 in 30 minutes', text: 'A live walkthrough with the founder. Tell us how you run HR today, pick a time, and we’ll show you the parts that matter to you.', time: 'About 2 minutes' },
+  steps: [
+    { id: 'name', type: 'text', title: 'First things first, what’s your name?', ph: 'Type your name', req: 1, max: 80, ac: 'name' },
+    { id: 'email', type: 'email', title: 'Thanks, <em>{first}</em>. Where should we send the invite?', help: 'Your work email works best.', ph: 'name@company.com', req: 1 },
+    { id: 'company', type: 'text', title: 'Which company are you with?', ph: 'Company name', req: 1, max: 100, ac: 'organization' },
+    { id: 'role', type: 'single', title: 'What do you do, {first}?', opts: ROLES, other: 'Other', req: 1 },
+    { id: 'size', type: 'single', title: 'How many people work there?', opts: SIZES, two: 1, req: 1 },
+    { id: 'entities', type: 'single', title: 'How many legal companies do you run payroll for?', opts: ['One', '2 – 3', '4 or more'], req: 1 },
+    { id: 'focus', type: 'multi', title: 'What should we cover?', opts: ['Hiring', 'Onboarding', 'Leave and attendance', 'Payroll', 'People records', 'Policies and documents', 'Engagement', 'Pricing and set-up'], two: 1, req: 1 },
+    { id: 'day', type: 'single', title: 'Which day suits you?', help: 'We’ll confirm the exact time by email.', opts: days, two: 1, req: 1 },
+    { id: 'slot', type: 'single', title: 'And what time of day?', help: 'All times are Indian Standard Time.', opts: [{ v: 'Morning', s: '10 am – 12 pm' }, { v: 'Afternoon', s: '2 pm – 4 pm' }, { v: 'Evening', s: '5 pm – 7 pm' }], req: 1 },
+    { id: 'mode', type: 'single', title: 'How would you like to meet?', opts: ['Google Meet', 'Zoom', 'Microsoft Teams', 'Phone or WhatsApp call'], req: 1 },
+    { id: 'phone', type: 'phone', title: 'Your phone number?', help: 'In case we need to reach you before the call.', ph: '98765 43210', req: 1 },
+    { id: 'notes', type: 'long', title: 'Anything we should know before the call?', ph: 'For example: we run payroll for 120 people across two companies on spreadsheets.' }
+  ],
+  end: (A, esc) => ({
+    title: 'Request received, ' + esc((A.name || '').split(' ')[0]),
+    text: 'We’ll confirm your demo for <b>' + esc(A.day) + ', ' + esc((A.slot || '').toLowerCase()) + '</b> by email at ' + esc(A.email) + ', within one working day.',
+    recap: [['Meeting', A.mode || '–'], ['We’ll cover', (A.focus || []).slice(0, 3).join(', ') + ((A.focus || []).length > 3 ? ' and more' : '')]],
+    actions: '<a class="btn-primary" href="../product/">Explore the product</a><a class="btn" href="../">Back to six24.in</a>'
+  })
+};
+
+</script>
+<script src="../assets/flow.js"></script>
+</body>
+</html>

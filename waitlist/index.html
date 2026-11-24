@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-IN" class="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Join the waitlist · SIX24</title>
+<meta name="description" content="Join the SIX24 waitlist. We onboard a few companies at a time and do the set-up for you.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://six24.in/waitlist/">
+<meta property="og:title" content="Join the waitlist · SIX24"><meta property="og:description" content="Join the SIX24 waitlist. We onboard a few companies at a time and do the set-up for you."><meta property="og:url" content="https://six24.in/waitlist/"><meta property="og:image" content="https://six24.in/assets/media/hero-poster.jpg">
+<script>(function(){var t;try{t=localStorage.getItem('six24.theme')}catch(e){}if(t)t=t.replace(/"/g,'');if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.className=t})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/flow.css">
+</head>
+<body>
+<div class="amb" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+<header class="top">
+  <a class="brand" href="../" aria-label="SIX24 home"><span class="s24">S24</span><span class="brand-t">Join the waitlist</span></a>
+  <div class="top-r">
+    <span class="count mono" id="count"></span>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch theme" title="Switch theme"></button>
+    <a class="icon-btn" id="closeBtn" href="../" aria-label="Close and go back to six24.in" title="Close"></a>
+  </div>
+</header>
+<main class="stage" id="stage" aria-live="polite"></main>
+<input class="hp" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+<div class="foot" aria-hidden="true"></div>
+<nav class="pager" id="pager" aria-label="Question navigation"><button id="upBtn" type="button" aria-label="Previous question"></button><button id="downBtn" type="button" aria-label="Next question"></button></nav>
+<div class="pv" id="pv">Preview: answers stay in this browser until the form is connected</div>
+<div class="scrim" id="scrim" role="dialog" aria-modal="true" aria-labelledby="dlgT">
+  <div class="dlg">
+    <h2 id="dlgT">Leave this form?</h2>
+    <p>Your answers are kept on this device if you save them. Open this page again to pick up where you left off.</p>
+    <div class="dlg-a"><button class="btn btn-bad" id="dDiscard" type="button">Discard</button><button class="btn" id="dCont" type="button">Continue</button><button class="btn-primary" id="dSave" type="button">Save and leave</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="../assets/config.js"></script>
+<script>
+
+const ROLES = ['People / HR', 'Finance', 'Founder / Leadership', 'Manager', 'Employee', 'Other'];
+const SIZES = ['Under 15', '15 – 50', '51 – 100', '101 – 300', '301 – 1,000', '1,000+'];
+
+window.FLOW = {
+  key: 'waitlist', home: '../', submitLabel: 'Join the waitlist', prefill: ['plan', 'name', 'email'],
+  welcome: { eyebrow: 'SIX24 · Early access', title: 'Join the SIX24 waitlist', text: 'We onboard a few companies at a time and do the set-up for you. Tell us about your team and we’ll write when your slot opens.', time: 'About 2 minutes' },
+  steps: [
+    { id: 'name', type: 'text', title: 'First things first, what’s your name?', ph: 'Type your name', req: 1, max: 80, ac: 'name' },
+    { id: 'email', type: 'email', title: 'Nice to meet you, <em>{first}</em>. What’s your work email?', help: 'We use it only to tell you when your early-access slot opens.', ph: 'name@company.com', req: 1 },
+    { id: 'company', type: 'text', title: 'Which company are you with?', ph: 'Company name', req: 1, max: 100, ac: 'organization' },
+    { id: 'role', type: 'single', title: 'What do you do, {first}?', opts: ROLES, other: 'Other', req: 1 },
+    { id: 'size', type: 'single', title: 'How many people work there?', opts: SIZES, two: 1, req: 1 },
+    { id: 'tool', type: 'single', title: 'What do you use for HR today?', opts: ['Spreadsheets', 'Keka', 'greytHR', 'Zoho People', 'Darwinbox', 'Other'], other: 'Other', two: 1, req: 1 },
+    { id: 'pain', type: 'multi', title: 'What takes up most of your team’s time?', opts: ['Leave and attendance', 'Payroll checks', 'Hiring', 'Onboarding', 'Employee questions', 'Policies and documents', 'Compliance', 'Reports for leadership'], two: 1, req: 1 },
+    { id: 'plan', type: 'single', title: 'Which plan looks right for you?', help: 'Not sure? <a href="../pricing/" target="_blank" rel="noopener">Compare the plans</a>, or pick “Not sure yet”.', opts: [{ v: 'Six', s: '15 to 100 people, one HR person' }, { v: 'Twelve', s: '50 to 500 people, HR team and finance head' }, { v: 'Twenty-Four', s: '300+ people, several companies' }, { v: 'Not sure yet' }], req: 1 },
+    { id: 'phone', type: 'phone', title: 'Your WhatsApp number?', help: 'So we can reach you faster. Leave it blank if you prefer email.', ph: '98765 43210' }
+  ],
+  end: (A, esc) => ({
+    title: 'You’re on the list, ' + esc((A.name || '').split(' ')[0]),
+    text: 'We’ll write to <b>' + esc(A.email) + '</b> when your early-access slot opens. Want to see SIX24 sooner? Book a 30-minute walkthrough.',
+    recap: [['Company', A.company || '–'], ['Plan', A.plan || '–']],
+    actions: '<a class="btn-primary" href="../demo/?name=' + encodeURIComponent(A.name || '') + '&email=' + encodeURIComponent(A.email || '') + '&src=waitlist">Book a demo</a><a class="btn" href="../">Back to six24.in</a>'
+  })
+};
+
+</script>
+<script src="../assets/flow.js"></script>
+</body>
+</html>
